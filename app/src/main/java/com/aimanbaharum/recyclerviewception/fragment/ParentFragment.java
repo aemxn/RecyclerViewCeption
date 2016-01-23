@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.aimanbaharum.recyclerviewception.R;
 import com.aimanbaharum.recyclerviewception.adapter.ParentAdapter;
 import com.aimanbaharum.recyclerviewception.model.Child;
-import com.aimanbaharum.recyclerviewception.model.Parent;
+import com.aimanbaharum.recyclerviewception.model.ParentChild;
 
 import java.util.ArrayList;
 
@@ -28,11 +28,8 @@ public class ParentFragment extends Fragment {
     @Bind(R.id.rv_parent)
     RecyclerView recyclerViewParent;
 
-    ArrayList<Parent> parentObj;
-    ArrayList<Child> childObj;
+    ArrayList<ParentChild> parentChildObj;
 
-    static final int PARENT_MAX = 5;
-    static final int CHILD_MAX = 3;
 
     public ParentFragment() {
     }
@@ -55,33 +52,39 @@ public class ParentFragment extends Fragment {
         recyclerViewParent.setLayoutManager(manager);
         recyclerViewParent.setHasFixedSize(true);
 
-        ParentAdapter parentAdapter = new ParentAdapter(getActivity(), getParentData(), getChildData());
+        ParentAdapter parentAdapter = new ParentAdapter(getActivity(), getParentChildData());
         recyclerViewParent.setAdapter(parentAdapter);
     }
 
-    private ArrayList<Child> getChildData() {
+    private ArrayList<ParentChild> getParentChildData() {
+        parentChildObj = new ArrayList<>();
+        ArrayList<Child> c1List = new ArrayList<>();
+        ArrayList<Child> c2List = new ArrayList<>();
 
-        childObj = new ArrayList<>();
-
-        for (int i = 0; i < CHILD_MAX; i++) {
-            Child c = new Child();
-            c.setChild_name("Child " + i);
-            childObj.add(c);
+        for (int i = 0; i < 3; i++) {
+            Child c1 = new Child();
+            c1.setChild_name("Child 1." + (i + 1));
+            c1List.add(c1);
         }
 
-        return childObj;
-    }
-
-    private ArrayList<Parent> getParentData() {
-        parentObj = new ArrayList<>();
-
-        for (int i = 0; i < PARENT_MAX; i++) {
-            Parent p = new Parent();
-            p.setParent_header("Header " + i);
-            parentObj.add(p);
+        for (int i = 0; i < 5; i++) {
+            Child c2 = new Child();
+            c2.setChild_name("Child 2." + (i + 1));
+            c2List.add(c2);
         }
 
-        return parentObj;
+        ParentChild pc1 = new ParentChild();
+        pc1.setHeader("Header 1");
+        pc1.setChild(c1List);
+        parentChildObj.add(pc1);
+
+        ParentChild pc2 = new ParentChild();
+        pc2.setHeader("Header 2");
+        pc2.setChild(c2List);
+        parentChildObj.add(pc2);
+
+
+        return parentChildObj;
     }
 
     @Override

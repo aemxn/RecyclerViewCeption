@@ -1,16 +1,18 @@
 package com.aimanbaharum.recyclerviewception.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aimanbaharum.recyclerviewception.R;
 import com.aimanbaharum.recyclerviewception.model.Child;
-import com.aimanbaharum.recyclerviewception.model.Parent;
+import com.aimanbaharum.recyclerviewception.model.ParentChild;
+
+import org.solovyev.android.views.llm.LinearLayoutManager;
 
 import java.util.ArrayList;
 
@@ -22,15 +24,17 @@ import butterknife.ButterKnife;
  */
 public class ParentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<Parent> parentData;
-    ArrayList<Child> childData;
+//    ArrayList<Parent> parentData;
+//    ArrayList<Child> childData;
+    ArrayList<ParentChild> parentChildData;
+
     Context ctx;
 
-    public ParentAdapter(Context ctx, ArrayList<Parent> parentData,
-                         ArrayList<Child> childData) {
+    public ParentAdapter(Context ctx, ArrayList<ParentChild> parentChildData) {
         this.ctx = ctx;
-        this.parentData = parentData;
-        this.childData= childData;
+//        this.parentData = parentData;
+//        this.childData= childData;
+        this.parentChildData = parentChildData;
 
     }
 
@@ -62,17 +66,34 @@ public class ParentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         ViewHolder vh = (ViewHolder) holder;
 
-        initChildLayoutManager(vh.rv_child);
 
-        Parent p = parentData.get(position);
-        vh.tv_header.setText(p.getParent_header());
+        ParentChild p = parentChildData.get(position);
+        vh.tv_header.setText(p.getHeader());
+
+        initChildLayoutManager(vh.rv_child, p.getChild());
     }
 
-    private void initChildLayoutManager(RecyclerView rv_child) {
-        LinearLayoutManager manager = new LinearLayoutManager(ctx);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+    private void initChildLayoutManager(RecyclerView rv_child, ArrayList<Child> childData) {
+        LinearLayoutManager manager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+//        manager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_child.setLayoutManager(manager);
         rv_child.setHasFixedSize(true);
+        rv_child.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
 
         ChildAdapter childAdapter = new ChildAdapter(childData);
         rv_child.setAdapter(childAdapter);
@@ -80,6 +101,6 @@ public class ParentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return parentData.size();
+        return parentChildData.size();
     }
 }
